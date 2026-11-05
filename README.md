@@ -182,33 +182,38 @@ mkdir -p ~/software
 cd ~/software
 ```
 
-You can configure your chosen DATABASES and PROJECTS paths manually in `~/.bashrc`. Open the file in an editor (for example, `nano ~/.bashrc`) and add the following lines, **replacing the example paths with your own**:
+Configure the two storage locations using `setup_biology_first.sh` supplied with this Biology-First overview repository. If you have not cloned the overview yet, obtain it first:
 
 ```bash
-# Biology-First: user-selected storage locations
-export BIOLOGY_FIRST_DB_ROOT="/path/to/databases"
-export BIOLOGY_FIRST_PROJECT_ROOT="/path/to/projects"
+cd ~/software
+git clone https://github.com/bharat1912/biology-first-bioinformatics.git
 ```
 
-Save the file, then load the settings and check the paths:
+Run its setup script:
+
+```bash
+bash ~/software/biology-first-bioinformatics/setup_biology_first.sh
+```
+
+The script asks you to select a **PROJECTS** directory and a **DATABASES** directory. It checks the directories, saves the paths in one clearly marked block in `~/.bashrc`, and defines the compatibility names used by older workflows. It does **not** move, delete or download project data or reference databases. It also checks for competing Biology-First path assignments in `~/.bashrc` and stops if they need review.
+
+Open a new terminal, or reload your shell settings, and confirm the two paths:
 
 ```bash
 source ~/.bashrc
-echo "$BIOLOGY_FIRST_DB_ROOT"
-echo "$BIOLOGY_FIRST_PROJECT_ROOT"
+printf 'PROJECTS:  %s\n' "$BIOLOGY_FIRST_PROJECT_ROOT"
+printf 'DATABASES: %s\n' "$BIOLOGY_FIRST_DB_ROOT"
 ```
 
-Make sure the directories exist and are accessible before downloading large datasets or databases. On an external drive, ensure that the drive is mounted before running an ecosystem.
+Check that these are the directories you selected. If you use a removable or external drive, ensure it is mounted before you run the workflows.
 
-**Compatibility with existing workflows:** Some older ecosystem scripts use `EXTERNAL_VAULT` for the *database* path and `BIOLOGY_FIRST_PROJECTS_ROOT` or `PROJECT_ROOT` for the *projects* path. Until those scripts have been updated, users who need them can add these aliases to `~/.bashrc` as well:
+To **change the saved locations later**, use:
 
 ```bash
-export EXTERNAL_VAULT="$BIOLOGY_FIRST_DB_ROOT"
-export BIOLOGY_FIRST_PROJECTS_ROOT="$BIOLOGY_FIRST_PROJECT_ROOT"
-export PROJECT_ROOT="$BIOLOGY_FIRST_PROJECT_ROOT"
+bash ~/software/biology-first-bioinformatics/setup_biology_first.sh --reset
 ```
 
-These are compatibility names, **not additional storage locations**. Individual ecosystem READMEs will specify any database or project-path configuration needed by their current workflows. A setup script is not required for the general installation described here.
+`--reset` updates the recorded locations only; it does **not** move existing projects or databases, or repair existing symbolic links. If the script reports conflicting old assignments, review them before continuing. The SOFTWARE folder is a recommendation rather than a configured variable; if you cloned the overview elsewhere, run the script using its actual path.
 
 ### Step 4: Install ecosystems progressively
 
